@@ -1,6 +1,6 @@
 <?php
 
-namespace ThatsUs\RedLock;
+namespace DealerInspire\RedLock;
 
 use Mockery;
 use TestCase;
@@ -26,7 +26,7 @@ class RedLockTest extends TestCase
     private function assertGoodRedisMake($args)
     {
         $this->assertTrue(is_array($args));
-        $app = app(); 
+        $app = app();
         if (method_exists($app, 'makeWith')) {
             // Laravel 5.4+
             $this->assertEquals($this->servers[0], $args['parameters']);
@@ -46,7 +46,7 @@ class RedLockTest extends TestCase
                 ->with('XYZ', Mockery::any(), "PX", 300000, "NX")
                 ->once()
                 ->andReturn(true);
-            return $predis; 
+            return $predis;
         });
 
         $redlock = new RedLock($this->servers);
@@ -73,7 +73,7 @@ class RedLockTest extends TestCase
 
         $redlock = new RedLock($this->servers);
         $redlock->unlock([
-            'resource' => 'XYZ', 
+            'resource' => 'XYZ',
             'validity' => 300000,
             'token' => 1234,
         ]);
@@ -120,11 +120,11 @@ class RedLockTest extends TestCase
 
         $redlock = new RedLock($this->servers);
         $redlock->unlock([
-            'resource' => 'XYZ', 
+            'resource' => 'XYZ',
             'validity' => 300000,
             'token' => 1234,
         ]);
-        
+
         $this->assertGoodRedisMake($caught_args);
     }
 
@@ -147,7 +147,7 @@ class RedLockTest extends TestCase
 
         $redlock = new RedLock($this->servers);
         $lock = $redlock->refreshLock([
-            'resource' => 'XYZ', 
+            'resource' => 'XYZ',
             'validity' => 300000,
             'token' => 1234,
             'ttl' => 300000,
