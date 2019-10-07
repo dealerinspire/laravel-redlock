@@ -27,13 +27,13 @@ This example sets a lock on the key "1" with a 3 second expiration time.
 
 If it acquired the lock, it does some work and releases the lock.
 
-```php 
+```php
  use ThatsUs\RedLock\Facades\RedLock;
 
  $product_id = 1;
 
  $lock_token = RedLock::lock($product_id, 3000);
- 
+
  if ($lock_token) {
 
      $order->submit($product_id);
@@ -46,13 +46,13 @@ If it acquired the lock, it does some work and releases the lock.
 
 Use `refreshLock()` to reacquire and extend the time of your lock.
 
-```php 
+```php
  use ThatsUs\RedLock\Facades\RedLock;
 
  $product_ids = [1, 2, 3, 5, 7];
 
  $lock_token = RedLock::lock('order-submitter', 3000);
- 
+
  while ($product_ids && $lock_token) {
 
      $order->submit(array_shift($product_ids));
@@ -180,6 +180,3 @@ If you find a bug or want to contribute to the code or documentation, you can he
 ### License
 
 [MIT](http://opensource.org/licenses/MIT)
-
-
-# laravel-redlock

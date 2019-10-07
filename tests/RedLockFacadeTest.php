@@ -1,6 +1,6 @@
 <?php
 
-namespace ThatsUs\RedLock\Facades;
+namespace DealerInspire\RedLock\Facades;
 
 use Mockery;
 use TestCase;
@@ -20,6 +20,6 @@ class RedLockFacadeTest extends TestCase
 
     public function testRoot()
     {
-        $this->assertTrue(RedLock::getFacadeRoot() instanceof \ThatsUs\RedLock\RedLock);
+        $this->assertTrue(RedLock::getFacadeRoot() instanceof \DealerInspire\RedLock\RedLock);
     }
 }

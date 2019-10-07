@@ -1,17 +1,17 @@
 <?php
 
-namespace ThatsUs\RedLock\Traits;
+namespace DealerInspire\RedLock\Traits;
 
-use ThatsUs\RedLock\Facades\RedLock;
+use DealerInspire\RedLock\Facades\RedLock;
 use Illuminate\Database\Eloquent\Model;
-use ThatsUs\RedLock\Exceptions\QueueWithoutOverlapRefreshException;
+use DealerInspire\RedLock\Exceptions\QueueWithoutOverlapRefreshException;
 
 trait QueueWithoutOverlap
 {
     protected $lock;
 
     /**
-     * Put this job on that queue. Or don't 
+     * Put this job on that queue. Or don't
      * if we fail to acquire the lock.
      * @return string|bool - queue code or false
      */
@@ -29,7 +29,7 @@ trait QueueWithoutOverlap
     }
 
     /**
-     * Lock this job's key in redis, so no other 
+     * Lock this job's key in redis, so no other
      * jobs can run with the same key.
      * @return bool - false if it fails to lock
      */
@@ -56,9 +56,9 @@ trait QueueWithoutOverlap
      * Build a unique key based on the values stored in this job.
      * Any job with the same values is assumed to represent the same
      * task and so will not overlap this.
-     * 
+     *
      * Override this method if necessary.
-     * 
+     *
      * @return string
      */
     protected function getLockKey()
@@ -80,7 +80,7 @@ trait QueueWithoutOverlap
     /**
      * This code is copied from Illuminate\Bus\Dispatcher v5.4
      * @ https://github.com/laravel/framework/blob/5.4/src/Illuminate/Bus/Dispatcher.php#L163
-     * 
+     *
      * Push the command onto the given queue instance.
      *
      * @param  \Illuminate\Contracts\Queue\Queue  $queue
