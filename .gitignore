@@ -1,0 +1,5 @@
+sftp-config.json
+vendor
+composer.lock
+
+\.idea/

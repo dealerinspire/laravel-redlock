@@ -1,0 +1,63 @@
+{
+  "name": "thatsus/laravel-redlock",
+  "description": "Redis distributed locks for laravel",
+  "license": "MIT",
+  "keywords": ["redlock", "laravel redis lock", "redis lock"],
+  "authors": [
+    {
+      "name": "LibiChai",
+      "email": "chaiguoxing@qq.com"
+    },
+    {
+      "name": "Daniel Kuck-Alvarez",
+      "email": "dankuck@gmail.com"
+    },
+    {
+      "name": "Potsky",
+      "email": "potsky@me.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "illuminate/support": "^5.0",
+    "illuminate/console": "^5.0",
+    "predis/predis": "^1.1"
+  },
+  "require-dev": {
+    "orchestra/testbench": "~3.0",
+    "php-mock/php-mock-mockery": "^1.1",
+    "phpunit/phpunit": "~5.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "ThatsUs\\RedLock\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "ThatsUs\\RedLock\\RedLockServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "test": [
+      "rm vendor -rf; rm composer.lock; echo 1",
+      "composer require --dev orchestra/testbench 3.4",
+      "phpunit | tee phpunit.4.log",
+      "rm vendor -rf; rm composer.lock; echo 1",
+      "composer require --dev orchestra/testbench 3.3",
+      "phpunit | tee phpunit.3.log",
+      "rm vendor -rf; rm composer.lock; echo 1",
+      "composer require --dev orchestra/testbench 3.2",
+      "phpunit | tee phpunit.2.log",
+      "cat phpunit.*.log"
+    ]
+  },
+  "minimum-stability": "stable"
+}
