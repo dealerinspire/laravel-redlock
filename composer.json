@@ -1,5 +1,5 @@
 {
-  "name": "thatsus/laravel-redlock",
+  "name": "dealerinspire/laravel-redlock",
   "description": "Redis distributed locks for laravel",
   "license": "MIT",
   "keywords": ["redlock", "laravel redis lock", "redis lock"],
@@ -41,7 +41,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "ThatsUs\\RedLock\\RedLockServiceProvider"
+        "DealerInspire\\RedLock\\RedLockServiceProvider"
       ]
     }
   },
