@@ -38,7 +38,7 @@ trait QueueWithoutOverlap
     protected function acquireLock(Lock $lock = null)
     {
         $lock_time = isset($this->lock_time) ? $this->lock_time : 300; // in seconds; 5 minutes default
-        $resource = null !== $lock ? $lock->getResource() : $this->getLockKey();
+        $resource = null !== $lock ? $lock->getResource() ?? $this->getLockKey() : $this->getLockKey();
         $this->lock = RedLock::lock($resource, $lock_time * 1000);
         return (bool)$this->lock;
     }
