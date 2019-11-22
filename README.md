@@ -10,8 +10,8 @@ This library was originally built by LibiChai based on the Redlock algorithm dev
 
 ### Installation
 
-1. `composer require thatsus/laravel-redlock`
-2. Add `ThatsUs\RedLock\RedLockServiceProvider::class,` to the `providers` array in config/app.php
+1. `composer require dealerinspire/laravel-redlock`
+2. Add `DealerInspire\RedLock\RedLockServiceProvider::class,` to the `providers` array in config/app.php
 3. Enjoy!
 
 
@@ -28,7 +28,7 @@ This example sets a lock on the key "1" with a 3 second expiration time.
 If it acquired the lock, it does some work and releases the lock.
 
 ```php
- use ThatsUs\RedLock\Facades\RedLock;
+ use DealerInspire\RedLock\Facades\RedLock;
 
  $product_id = 1;
 
@@ -47,7 +47,7 @@ If it acquired the lock, it does some work and releases the lock.
 Use `refreshLock()` to reacquire and extend the time of your lock.
 
 ```php
- use ThatsUs\RedLock\Facades\RedLock;
+ use DealerInspire\RedLock\Facades\RedLock;
 
  $product_ids = [1, 2, 3, 5, 7];
 
@@ -68,7 +68,7 @@ Use `refreshLock()` to reacquire and extend the time of your lock.
 Use `runLocked()` for nicer syntax. The method returns the results of the closure, or else false if the lock could not be acquired.
 
 ```php
- use ThatsUs\RedLock\Facades\RedLock;
+ use DealerInspire\RedLock\Facades\RedLock;
 
  $product_id = 1;
 
@@ -85,7 +85,7 @@ Use `runLocked()` for nicer syntax. The method returns the results of the closur
 You can easily refresh your tokens when using closures. The first parameter to your closure is `$refresh`. Simply call it when you want to refresh. If the lock cannot be refreshed, `$refresh()` will break out of the closure.
 
 ```php
- use ThatsUs\RedLock\Facades\RedLock;
+ use DealerInspire\RedLock\Facades\RedLock;
 
  $product_ids = [1, 2, 3, 5, 7];
 
@@ -104,13 +104,13 @@ You can easily refresh your tokens when using closures. The first parameter to y
 
 If you're running jobs on a Laravel queue, you may want to avoid queuing up the same job more than once at a time.
 
-The `ThatsUs\RedLock\Traits\QueueWithoutOverlap` trait provides this functionality with very few changes to your job. Usually only two changes are necessary.
+The `DealerInspire\RedLock\Traits\QueueWithoutOverlap` trait provides this functionality with very few changes to your job. Usually only two changes are necessary.
 
-1. `use ThatsUs\RedLock\Traits\QueueWithoutOverlap` as a trait
+1. `use DealerInspire\RedLock\Traits\QueueWithoutOverlap` as a trait
 2. Change the `handle()` method to `handleSync()`
 
 ```php
-use ThatsUs\RedLock\Traits\QueueWithoutOverlap;
+use DealerInspire\RedLock\Traits\QueueWithoutOverlap;
 
 class OrderProductJob
 {
@@ -140,7 +140,7 @@ Finally, you can change the lock time-to-live from the default 300 seconds to an
 value using the `$lock_time` property.
 
 ```php
-use ThatsUs\RedLock\Traits\QueueWithoutOverlap;
+use DealerInspire\RedLock\Traits\QueueWithoutOverlap;
 
 class OrderProductsJob
 {
