@@ -30,7 +30,7 @@
   },
   "autoload": {
     "psr-4": {
-      "ThatsUs\\RedLock\\": "src/"
+      "DealerInspire\\RedLock\\": "src/"
     }
   },
   "autoload-dev": {
