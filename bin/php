@@ -1,0 +1,2 @@
+#!/bin/bash
+docker run -it --rm --name laravel-redlock -v "$PWD":/usr/src/laravel-redlock -w /usr/src/laravel-redlock php:7.2-cli php "$@"

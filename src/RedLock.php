@@ -22,7 +22,12 @@ class RedLock
         $this->quorum = min(count($servers), (count($servers) / 2 + 1));
     }
 
-    public function lock($resource, $ttl)
+    /**
+     * @param $resource
+     * @param $ttl
+     * @return Lock|null
+     */
+    public function lock($resource, $ttl): ?Lock
     {
         $this->initInstances();
         $token = uniqid();
@@ -41,12 +46,7 @@ class RedLock
             $drift = ($ttl * $this->clockDriftFactor) + 2;
             $validityTime = $ttl - (microtime(true) * 1000 - $startTime) - $drift;
             if ($n >= $this->quorum && $validityTime > 0) {
-                return [
-                    'validity' => $validityTime,
-                    'resource' => $resource,
-                    'token'    => $token,
-                    'ttl'      => $ttl,
-                ];
+                return new Lock($this, $validityTime, $resource, $token, $ttl);
             } else {
                 foreach ($this->instances as $instance) {
                     $this->unlockInstance($instance, $resource, $token);
@@ -57,14 +57,17 @@ class RedLock
             usleep($delay * 1000);
             $retry--;
         } while ($retry > 0);
-        return false;
+        return null;
     }
 
-    public function unlock(array $lock)
+    /**
+     * @param Lock $lock
+     */
+    public function unlock(Lock $lock): void
     {
         $this->initInstances();
-        $resource = $lock['resource'];
-        $token    = $lock['token'];
+        $resource = $lock->getResource();
+        $token    = $lock->getToken();
         foreach ($this->instances as $instance) {
             $this->unlockInstance($instance, $resource, $token);
         }
@@ -105,10 +108,14 @@ class RedLock
         //return $instance->eval($script, [$resource, $token], 1);
     }
 
-    public function refreshLock(array $lock)
+    /**
+     * @param Lock $lock
+     * @return Lock|null
+     */
+    public function refreshLock(Lock $lock)
     {
         $this->unlock($lock);
-        return $this->lock($lock['resource'], $lock['ttl']);
+        return $this->lock($lock->getResource(), $lock->getTtl());
     }
 
     public function runLocked($resource, $ttl, $closure)
@@ -128,7 +135,7 @@ class RedLock
         } catch (Exceptions\ClosureRefreshException $e) {
             return false;
         } finally {
-            if (is_array($lock)) {
+            if (is_object($lock)) {
                 $this->unlock($lock);
             }
         }
