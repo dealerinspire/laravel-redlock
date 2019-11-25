@@ -13,6 +13,7 @@ class RedLock
     private $quorum;
     private $servers = array();
     private $instances = array();
+    public const DEFAULT_LOCK_TIME = 300; //in seconds; 5 minutes default
 
     public function __construct(array $servers, $retryDelay = 200, $retryCount = 3)
     {
@@ -135,7 +136,7 @@ class RedLock
         } catch (Exceptions\ClosureRefreshException $e) {
             return false;
         } finally {
-            if (is_object($lock)) {
+            if ($lock) {
                 $this->unlock($lock);
             }
         }
