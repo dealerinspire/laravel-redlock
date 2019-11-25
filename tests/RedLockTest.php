@@ -53,9 +53,9 @@ class RedLockTest extends TestCase
         $lock = $redlock->lock('XYZ', 300000);
 
         $this->assertGoodRedisMake($caught_args);
-        $this->assertEquals('XYZ', $lock['resource']);
-        $this->assertTrue(is_numeric($lock['validity']));
-        $this->assertNotNull($lock['token']);
+        $this->assertEquals('XYZ', $lock->getResource());
+        $this->assertTrue(is_numeric($lock->getValidityTime()));
+        $this->assertNotNull($lock->getToken());
     }
 
     public function testUnlock()
@@ -72,11 +72,28 @@ class RedLockTest extends TestCase
         });
 
         $redlock = new RedLock($this->servers);
-        $redlock->unlock([
-            'resource' => 'XYZ',
-            'validity' => 300000,
-            'token' => 1234,
-        ]);
+        $lock = new Lock($redlock, 300000, 'XYZ', '1234', 300000);
+        $redlock->unlock($lock);
+
+        $this->assertGoodRedisMake($caught_args);
+    }
+
+    public function testUnlockWithLockObject()
+    {
+        $caught_args = null;
+        App::bind(Redis::class, function ($app, $args) use (&$caught_args) {
+            $caught_args = $args;
+            $predis = Mockery::mock(Redis::class);
+            $predis->shouldReceive('eval')
+                ->with(Mockery::any(), 1, 'XYZ', '1234')
+                ->once()
+                ->andReturn(true);
+            return $predis;
+        });
+
+        $redlock = new RedLock($this->servers);
+        $lock = new Lock($redlock, 300000, 'XYZ', '1234', 300000);
+        $lock->unlock();
 
         $this->assertGoodRedisMake($caught_args);
     }
@@ -102,7 +119,7 @@ class RedLockTest extends TestCase
         $lock = $redlock->lock('XYZ', 300000);
 
         $this->assertGoodRedisMake($caught_args);
-        $this->assertFalse($lock);
+        $this->assertNull($lock);
     }
 
     public function testUnlockFail()
@@ -119,11 +136,8 @@ class RedLockTest extends TestCase
         });
 
         $redlock = new RedLock($this->servers);
-        $redlock->unlock([
-            'resource' => 'XYZ',
-            'validity' => 300000,
-            'token' => 1234,
-        ]);
+        $lock = new Lock($redlock, 300000, 'XYZ', '1234', 300000);
+        $redlock->unlock($lock);
 
         $this->assertGoodRedisMake($caught_args);
     }
@@ -146,17 +160,13 @@ class RedLockTest extends TestCase
         });
 
         $redlock = new RedLock($this->servers);
-        $lock = $redlock->refreshLock([
-            'resource' => 'XYZ',
-            'validity' => 300000,
-            'token' => 1234,
-            'ttl' => 300000,
-        ]);
+        $lockObj = new Lock($redlock, 300000, 'XYZ', '1234', 300000);
+        $lock = $redlock->refreshLock($lockObj);
 
         $this->assertGoodRedisMake($caught_args);
-        $this->assertEquals('XYZ', $lock['resource']);
-        $this->assertTrue(is_numeric($lock['validity']));
-        $this->assertNotNull($lock['token']);
+        $this->assertEquals('XYZ', $lock->getResource());
+        $this->assertTrue(is_numeric($lock->getValidityTime()));
+        $this->assertNotNull($lock->getToken());
     }
 
     public function testRunLocked()

@@ -32,13 +32,15 @@ If it acquired the lock, it does some work and releases the lock.
 
  $product_id = 1;
 
- $lock_token = RedLock::lock($product_id, 3000);
+ $lock_object = RedLock::lock($product_id, 3000);
 
- if ($lock_token) {
+ if ($lock_object) {
 
      $order->submit($product_id);
 
      RedLock::unlock($lock_token);
+     // or
+     $lock_object->unlock();
  }
 ```
 
@@ -51,16 +53,18 @@ Use `refreshLock()` to reacquire and extend the time of your lock.
 
  $product_ids = [1, 2, 3, 5, 7];
 
- $lock_token = RedLock::lock('order-submitter', 3000);
+ $lock_object = RedLock::lock('order-submitter', 3000);
 
- while ($product_ids && $lock_token) {
+ while ($product_ids && $lock_object) {
 
      $order->submit(array_shift($product_ids));
 
-     $lock_token = RedLock::refreshLock($lock_token);
+     $lock_object = RedLock::refreshLock($lock_object);
  }
 
- RedLock::unlock($lock_token);
+ RedLock::unlock($lock_object);
+ // or
+ $lock_object->unlock();
 ```
 
 ### Even Easier with Closures
@@ -176,6 +180,18 @@ class OrderProductsJob
 ### Contribution
 
 If you find a bug or want to contribute to the code or documentation, you can help by submitting an [issue](https://github.com/dealerinspire/laravel-redlock/issues) or a [pull request](https://github.com/dealerinspire/laravel-redlock/pulls).
+
+
+## Development
+Development is done through simple use of the official PHP and Composer images.
+
+# Getting Started
+1. Pull down the repo.
+2. Install dependencies with `bin/composer install`
+3. That's it!
+
+# Run tests
+Tests can be ran with `bin/php vendor/bin/phpunit`.
 
 ### License
 

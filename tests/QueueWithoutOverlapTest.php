@@ -3,6 +3,7 @@
 namespace DealerInspire\RedLock\Traits;
 
 use DealerInspire\RedLock\Facades\RedLock;
+use DealerInspire\RedLock\Lock;
 use Mockery;
 use TestCase;
 
@@ -20,12 +21,14 @@ class QueueWithoutOverlapTest extends TestCase
         $queue = Mockery::mock();
         $queue->shouldReceive('push')->with($job)->once();
 
+        $lock = new Lock(new \DealerInspire\RedLock\RedLock([]), 2, 'DealerInspire\RedLock\Traits\QueueWithoutOverlapJob::1000:', '1111', 2);
+
         RedLock::shouldReceive('lock')
             ->with("DealerInspire\RedLock\Traits\QueueWithoutOverlapJob::1000:", 1000000)
             ->twice()
-            ->andReturn(['resource' => 'DealerInspire\RedLock\Traits\QueueWithoutOverlapJob::1000:']);
+            ->andReturn($lock);
         RedLock::shouldReceive('unlock')
-            ->with(['resource' => 'DealerInspire\RedLock\Traits\QueueWithoutOverlapJob::1000:'])
+            ->with($lock)
             ->twice()
             ->andReturn(true);
 
@@ -45,7 +48,7 @@ class QueueWithoutOverlapTest extends TestCase
         RedLock::shouldReceive('lock')
             ->with("DealerInspire\RedLock\Traits\QueueWithoutOverlapJob::1000:", 1000000)
             ->once()
-            ->andReturn(false);
+            ->andReturn(null);
 
         $id = $job->queue($queue, $job);
 
@@ -59,15 +62,17 @@ class QueueWithoutOverlapTest extends TestCase
         $queue = Mockery::mock();
         $queue->shouldReceive('push')->with($job)->once();
 
+        $lock = new Lock(new \DealerInspire\RedLock\RedLock([]), 2, 'DealerInspire\RedLock\Traits\QueueWithoutOverlapJob::1000:', '1111', 2);
+
         RedLock::shouldReceive('lock')
             ->with("DealerInspire\RedLock\Traits\QueueWithoutOverlapJob::1000:", 1000000)
             ->twice()
             ->andReturn(
-                ['resource' => 'DealerInspire\RedLock\Traits\QueueWithoutOverlapJob::1000:'],
-                false
+                $lock,
+                null
             );
         RedLock::shouldReceive('unlock')
-            ->with(['resource' => 'DealerInspire\RedLock\Traits\QueueWithoutOverlapJob::1000:'])
+            ->with($lock)
             ->once()
             ->andReturn(true);
 
@@ -85,12 +90,14 @@ class QueueWithoutOverlapTest extends TestCase
         $queue = Mockery::mock();
         $queue->shouldReceive('push')->with($job)->once();
 
+        $lock = new Lock(new \DealerInspire\RedLock\RedLock([]), 2, 'DealerInspire\RedLock\Traits\QueueWithoutOverlapJobDefaultLockTime::', '1111', 2);
+
         RedLock::shouldReceive('lock')
             ->with("DealerInspire\RedLock\Traits\QueueWithoutOverlapJobDefaultLockTime::", 300000)
             ->twice()
-            ->andReturn(['resource' => "DealerInspire\RedLock\Traits\QueueWithoutOverlapJobDefaultLockTime::"]);
+            ->andReturn($lock);
         RedLock::shouldReceive('unlock')
-            ->with(['resource' => "DealerInspire\RedLock\Traits\QueueWithoutOverlapJobDefaultLockTime::"])
+            ->with($lock)
             ->twice()
             ->andReturn(true);
 

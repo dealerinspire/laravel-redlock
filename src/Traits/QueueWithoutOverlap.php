@@ -3,6 +3,7 @@
 namespace DealerInspire\RedLock\Traits;
 
 use DealerInspire\RedLock\Facades\RedLock;
+use DealerInspire\RedLock\Lock;
 use Illuminate\Database\Eloquent\Model;
 use DealerInspire\RedLock\Exceptions\QueueWithoutOverlapRefreshException;
 
@@ -31,12 +32,14 @@ trait QueueWithoutOverlap
     /**
      * Lock this job's key in redis, so no other
      * jobs can run with the same key.
+     * @param Lock|null $lock
      * @return bool - false if it fails to lock
      */
-    protected function acquireLock(array $lock = [])
+    protected function acquireLock(Lock $lock = null)
     {
-        $lock_time = isset($this->lock_time) ? $this->lock_time : 300; // in seconds; 5 minutes default
-        $this->lock = RedLock::lock($lock['resource'] ?? $this->getLockKey(), $lock_time * 1000);
+        $lock_time = $this->lock_time ?? \DealerInspire\RedLock\RedLock::DEFAULT_LOCK_TIME; // in seconds; 5 minutes default
+        $resource = null !== $lock ? $lock->getResource() ?? $this->getLockKey() : $this->getLockKey();
+        $this->lock = RedLock::lock($resource, $lock_time * 1000);
         return (bool)$this->lock;
     }
 
