@@ -8,7 +8,7 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         syntaxCheck="false">
+         >
     <testsuites>
         <testsuite name="ModelViewer Test Suite">
             <directory>./tests/</directory>
@@ -17,10 +17,10 @@
     <filter>
         <whitelist>
             <directory suffix=".php">src/</directory>
+            <exclude>
+                <file>app/Http/routes.php</file>
+            </exclude>
         </whitelist>
-        <blacklist>
-            <file>app/Http/routes.php</file>
-        </blacklist>
     </filter>
     <php>
         <env name="APP_ENV" value="testing"/>

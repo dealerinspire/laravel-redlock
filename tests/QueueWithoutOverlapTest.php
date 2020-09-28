@@ -11,6 +11,7 @@ class QueueWithoutOverlapTest extends TestCase
 {
     public function testInstanciate()
     {
+        self::expectNotToPerformAssertions();
         new QueueWithoutOverlapJob();
     }
 
