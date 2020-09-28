@@ -20,6 +20,7 @@ class RedLockTest extends TestCase
 
     public function testInstanciate()
     {
+        self::expectNotToPerformAssertions();
         new RedLock([]);
     }
 
@@ -39,7 +40,7 @@ class RedLockTest extends TestCase
     public function testLock()
     {
         $caught_args = null;
-        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+        App::bind(Redis::class, function ($app, $args) use (&$caught_args) {
             $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('set')
@@ -61,7 +62,7 @@ class RedLockTest extends TestCase
     public function testUnlock()
     {
         $caught_args = null;
-        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+        App::bind(Redis::class, function ($app, $args) use (&$caught_args) {
             $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('eval')
@@ -101,7 +102,7 @@ class RedLockTest extends TestCase
     public function testLockFail()
     {
         $caught_args = null;
-        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+        App::bind(Redis::class, function ($app, $args) use (&$caught_args) {
             $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('set')
@@ -125,7 +126,7 @@ class RedLockTest extends TestCase
     public function testUnlockFail()
     {
         $caught_args = null;
-        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+        App::bind(Redis::class, function ($app, $args) use (&$caught_args) {
             $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('eval')
@@ -145,7 +146,7 @@ class RedLockTest extends TestCase
     public function testRefresh()
     {
         $caught_args = null;
-        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+        App::bind(Redis::class, function ($app, $args) use (&$caught_args) {
             $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('eval')
@@ -172,7 +173,7 @@ class RedLockTest extends TestCase
     public function testRunLocked()
     {
         $caught_args = null;
-        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+        App::bind(Redis::class, function ($app, $args) use (&$caught_args) {
             $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('set')
@@ -198,7 +199,7 @@ class RedLockTest extends TestCase
     public function testRunLockedRefresh()
     {
         $caught_args = null;
-        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+        App::bind(Redis::class, function ($app, $args) use (&$caught_args) {
             $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('set')
@@ -225,7 +226,7 @@ class RedLockTest extends TestCase
     public function testRunLockedRefreshFail()
     {
         $caught_args = null;
-        App::bind(Redis::class, function($app, $args) use (&$caught_args) {
+        App::bind(Redis::class, function ($app, $args) use (&$caught_args) {
             $caught_args = $args;
             $predis = Mockery::mock(Redis::class);
             $predis->shouldReceive('set')
