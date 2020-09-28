@@ -1,12 +1,10 @@
 # Laravel RedLock
 
-Provides a generic locking mechanism using Redis. Implements the locking standard proposed by Redis.
-
-
+A Laravel-friendly implementation of the Redis [Redlock algorithm for distributed lock management](https://redis.io/topics/distlock).
 
 ### Acknowledgements
 
-This library was originally built by LibiChai based on the Redlock algorithm developed by antirez. The library was reworked by the team at That's Us, Inc. This project has been forked and maintained by Dealer Inspire Inc.
+This library was originally built by LibiChai based on the RedLock algorithm developed by antirez. The library was reworked by the team at That's Us, Inc. This project has been forked and maintained by Dealer Inspire Inc.
 
 ### Installation
 
@@ -14,6 +12,12 @@ This library was originally built by LibiChai based on the Redlock algorithm dev
 2. Add `DealerInspire\RedLock\RedLockServiceProvider::class,` to the `providers` array in config/app.php
 3. Enjoy!
 
+### Compatibility
+
+| Laravel Version  | RedLock Version |
+| ------------- | ------------- |
+| 5.x  | `^4.0`  |
+| 6.x  | `^6.0`  |
 
 ### It's Simple!
 
