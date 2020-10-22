@@ -18,6 +18,7 @@ This library was originally built by LibiChai based on the RedLock algorithm dev
 | ------------- | ------------- |
 | 5.x  | `^4.0`  |
 | 6.x  | `^6.0`  |
+| 7.x  | `^7.0`  |
 
 ### It's Simple!
 
