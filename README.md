@@ -9,16 +9,18 @@ This library was originally built by LibiChai based on the RedLock algorithm dev
 ### Installation
 
 1. `composer require dealerinspire/laravel-redlock`
-2. Add `DealerInspire\RedLock\RedLockServiceProvider::class,` to the `providers` array in config/app.php
+2. The `RedLockServiceProvider` should be Auto-discovered by Laravel. If not, add `DealerInspire\RedLock\RedLockServiceProvider::class,` to the `providers` array in `config/app.php`
 3. Enjoy!
 
 ### Compatibility
 
-| Laravel Version  | RedLock Version |
-| ------------- | ------------- |
-| 5.x  | `^4.0`  |
-| 6.x  | `^6.0`  |
-| 7.x  | `^7.0`  |
+| Laravel Version | RedLock Version |
+| --------------- | --------------- |
+| 5.x             | `^4.0`          |
+| 6.x             | `^6.0`          |
+| 7.x             | `^7.0`          |
+| 8.x             | `^8.0`          |
+| 9.x             | `^9.0`          |
 
 ### It's Simple!
 
@@ -33,20 +35,19 @@ This example sets a lock on the key "1" with a 3 second expiration time.
 If it acquired the lock, it does some work and releases the lock.
 
 ```php
- use DealerInspire\RedLock\Facades\RedLock;
+use DealerInspire\RedLock\Facades\RedLock;
 
- $product_id = 1;
+$product_id = 1;
 
- $lock_object = RedLock::lock($product_id, 3000);
+$lock_object = RedLock::lock($product_id, 3000);
 
- if ($lock_object) {
+if ($lock_object) {
+    $order->submit($product_id);
 
-     $order->submit($product_id);
-
-     RedLock::unlock($lock_token);
-     // or
-     $lock_object->unlock();
- }
+    RedLock::unlock($lock_token);
+    // or
+    $lock_object->unlock();
+}
 ```
 
 ### Refresh
@@ -54,22 +55,21 @@ If it acquired the lock, it does some work and releases the lock.
 Use `refreshLock()` to reacquire and extend the time of your lock.
 
 ```php
- use DealerInspire\RedLock\Facades\RedLock;
+use DealerInspire\RedLock\Facades\RedLock;
 
- $product_ids = [1, 2, 3, 5, 7];
+$product_ids = [1, 2, 3, 5, 7];
 
- $lock_object = RedLock::lock('order-submitter', 3000);
+$lock_object = RedLock::lock('order-submitter', 3000);
 
- while ($product_ids && $lock_object) {
+while ($product_ids && $lock_object) {
+    $order->submit(array_shift($product_ids));
 
-     $order->submit(array_shift($product_ids));
+    $lock_object = RedLock::refreshLock($lock_object);
+}
 
-     $lock_object = RedLock::refreshLock($lock_object);
- }
-
- RedLock::unlock($lock_object);
- // or
- $lock_object->unlock();
+RedLock::unlock($lock_object);
+// or
+$lock_object->unlock();
 ```
 
 ### Even Easier with Closures
@@ -77,16 +77,16 @@ Use `refreshLock()` to reacquire and extend the time of your lock.
 Use `runLocked()` for nicer syntax. The method returns the results of the closure, or else false if the lock could not be acquired.
 
 ```php
- use DealerInspire\RedLock\Facades\RedLock;
+use DealerInspire\RedLock\Facades\RedLock;
 
- $product_id = 1;
+$product_id = 1;
 
- $result = RedLock::runLocked($product_id, 3000, function () use ($order, $product_id) {
-     $order->submit($product_id);
-     return true;
- });
+$result = RedLock::runLocked($product_id, 3000, function () use ($order, $product_id) {
+    $order->submit($product_id);
+    return true;
+});
 
- echo $result ? 'Worked!' : 'Lock not acquired.';
+echo $result ? 'Worked!' : 'Lock not acquired.';
 ```
 
 ### Refresh with Closures
@@ -94,19 +94,19 @@ Use `runLocked()` for nicer syntax. The method returns the results of the closur
 You can easily refresh your tokens when using closures. The first parameter to your closure is `$refresh`. Simply call it when you want to refresh. If the lock cannot be refreshed, `$refresh()` will break out of the closure.
 
 ```php
- use DealerInspire\RedLock\Facades\RedLock;
+use DealerInspire\RedLock\Facades\RedLock;
 
- $product_ids = [1, 2, 3, 5, 7];
+$product_ids = [1, 2, 3, 5, 7];
 
- $result = RedLock::runLocked($product_id, 3000, function ($refresh) use ($order, $product_ids) {
-     foreach ($product_ids as $product_id) {
-         $refresh();
-         $order->submit($product_id);
-     }
-     return true;
- });
+$result = RedLock::runLocked($product_id, 3000, function ($refresh) use ($order, $product_ids) {
+    foreach ($product_ids as $product_id) {
+        $refresh();
+        $order->submit($product_id);
+    }
+    return true;
+});
 
- echo $result ? 'Worked!' : 'Lock lost or never acquired.';
+echo $result ? 'Worked!' : 'Lock lost or never acquired.';
 ```
 
 ### Lock Queue Jobs Easily
@@ -135,7 +135,6 @@ class OrderProductJob
     {
         $this->order->submit($this->product_id);
     }
-
 }
 ```
 
@@ -178,7 +177,6 @@ class OrderProductsJob
             $this->order->submit($product_id);
         }
     }
-
 }
 ```
 
@@ -186,16 +184,18 @@ class OrderProductsJob
 
 If you find a bug or want to contribute to the code or documentation, you can help by submitting an [issue](https://github.com/dealerinspire/laravel-redlock/issues) or a [pull request](https://github.com/dealerinspire/laravel-redlock/pulls).
 
-
 ## Development
+
 Development is done through simple use of the official PHP and Composer images.
 
 # Getting Started
+
 1. Pull down the repo.
 2. Install dependencies with `bin/composer install`
 3. That's it!
 
 # Run tests
+
 Tests can be ran with `bin/php vendor/bin/phpunit`.
 
 ### License
