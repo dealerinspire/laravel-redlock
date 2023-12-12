@@ -1,6 +1,6 @@
 sftp-config.json
 vendor
 composer.lock
+.phpunit.cache
 .phpunit.result.cache
-
 \.idea/

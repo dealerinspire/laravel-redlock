@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         bootstrap="vendor/autoload.php"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false"
-         >
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    backupGlobals="false"
+    bootstrap="vendor/autoload.php"
+    colors="true"
+    processIsolation="false"
+    stopOnFailure="false"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+    cacheDirectory=".phpunit.cache"
+    backupStaticProperties="false">
+    <coverage />
     <testsuites>
         <testsuite name="ModelViewer Test Suite">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">src/</directory>
-            <exclude>
-                <file>app/Http/routes.php</file>
-            </exclude>
-        </whitelist>
-    </filter>
     <php>
-        <env name="APP_ENV" value="testing"/>
-        <env name="CACHE_DRIVER" value="array"/>
-        <env name="SESSION_DRIVER" value="array"/>
-        <env name="QUEUE_DRIVER" value="sync"/>
+        <env name="APP_ENV" value="testing" />
+        <env name="CACHE_DRIVER" value="array" />
+        <env name="SESSION_DRIVER" value="array" />
+        <env name="QUEUE_DRIVER" value="sync" />
     </php>
+    <source>
+        <include>
+            <directory suffix=".php">src/</directory>
+        </include>
+        <exclude>
+            <file>app/Http/routes.php</file>
+        </exclude>
+    </source>
 </phpunit>
