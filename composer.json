@@ -24,7 +24,7 @@
       "predis/predis": "^2.0"
     },
     "require-dev": {
-      "orchestra/testbench": "^10.0",
+      "orchestra/testbench": "^8.0",
       "php-mock/php-mock-mockery": "^1.1",
       "phpunit/phpunit": "^9.0"
     },
